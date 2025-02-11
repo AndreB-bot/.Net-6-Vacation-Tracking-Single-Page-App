@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+
+<div>
+    <div class="row mt-3">
+        <div class="col-md-16">
+            <div class="form-group timeoff-type-container">
+                <label class="col-sm-1 col-form-label" for="Type" style="margin-right: 9%;">Type</label>
+                <select id="select-request-type" class="form-select" aria-label="type" name="Type" required>
+                    <option value="" disabled selected hidden> - Type -</option>
+                    <option value="vacation">Vacation</option>
+                    <option value="sick">Sick</option>
+                    @if (IsAdmin)
+                    {
+                        <option value="company">Company Day</option>
+                        <option value="stat">Stat Holiday</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (IsAdmin && EmployeeNames != null)
+{
+    <div>
+        <div class="row mt-3">
+            <div class="col-md-16">
+                <div class="form-group">
+                    <div id="select-employees-container" class="employees-select-container">
+                        <label class="col-sm-1 col-form-label" for="Employee" style="margin-right: 1%;">Employee</label>
+                        <select id="select-employees" class="form-select" aria-label="employees" name="Employee" required>
+                            <option value="" disabled selected hidden> - Employee -</option>
+                            @if (EmployeeNames != null)
+                            {
+                                foreach (var employee in EmployeeNames.OrderBy(key => key.Value))
+                                {
+                                    <option value="@employee.Key">@employee.Value</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                    <div id="request-title-container" class="d-none">
+                        <label class="col-sm-1 col-form-label" for="Title" style="margin-right: 10%;">Title</label>
+                        <input type="hidden" id="request-title" class="form-select" aria-label="employees" name="Title" style="background-image: none;" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// A Dictionary object of employees' names.
+    /// </summary>
+    [Parameter]
+    public Dictionary<string, string>? EmployeeNames { get; set; }
+
+    /// <summary>
+    /// Indicates whether the current user is an admin user.
+    /// </summary>
+    [Parameter]
+    public bool IsAdmin { get; set; }
+}

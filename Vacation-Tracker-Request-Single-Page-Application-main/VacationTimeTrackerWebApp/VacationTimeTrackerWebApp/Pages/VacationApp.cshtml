@@ -1,0 +1,83 @@
+﻿@page
+@using VacationTimeTrackerWebApp.Components
+@using VacationTimeTrackerWebApp.Models
+@model VacationTimeTrackerWebApp.Pages.VacationAppModel
+@{
+    ViewData["VacationApp"] = true;
+    ViewData["User"] = Model.Employee;
+    ViewData["NumRequests"] = Model.NumRequestAsString;
+}
+
+@*List all page-specific stylesheets required for this page.*@
+@section Stylesheets {
+<link href="~/lib/fullcalendar/main.min.css" rel="stylesheet" type="text/css" />
+<link href="~/css/calendar.css" rel="stylesheet" type="text/css" />
+<link href="~/css/forms.css" rel="stylesheet" type="text/css" />
+<link href="~/css/cards.css" rel="stylesheet" type="text/css" />
+<link href="~/css/modals.css" rel="stylesheet" type="text/css" />
+<link href="~/css/report.css" rel="stylesheet" type="text/css" />
+<link href="~/css/requests.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="~/lib/datepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+}
+
+@*List all page-specific scripts required for this page.*@
+@section Scripts {
+<script src="~/lib/fullcalendar/main.min.js" asp-append-version="true"></script>
+<script src="~/js/update.js" asp-append-version="true"></script>
+<script src="~/js/modals.js" asp-append-version="true"></script>
+<script src="~/js/offcanvas.js" asp-append-version="true"></script>
+<script src="~/js/submissions.js" asp-append-version="true"></script>
+<script src="~/js/calendar-config.js" asp-append-version="true"></script>
+<script src="~/js/sidebar.js" asp-append-version="true"></script>
+<script src="~/js/forms.js" asp-append-version="true"></script>
+<script src="~/js/requests.js" asp-append-version="true"></script>
+<script src="~/lib/fullcalendar/main.min.js" asp-append-version="true"></script>
+<script src="~/lib/moment/moment.min.js" asp-append-version="true"></script>
+<script src="~/lib/datepicker/bootstrap-datetimepicker.min.js" asp-append-version="true"></script>
+<script src="~/lib/jquery-ui/dist/jquery-ui.min.js" asp-append-version="true"></script>
+<script src="~/lib/jsPDF-AutoTable/dist/jspdf.umd.js" asp-append-version="true"></script>
+<script src="~/lib/jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js" asp-append-version="true"></script>
+<script src="~/js/report.js" asp-append-version="true"></script>
+}
+
+@if (Model.Employee != null)
+{
+    Employee user = Model.Employee;
+    var isAdmin = user.IsAdmin();
+
+    if (isAdmin)
+    {
+        @*Renders add-user modal*@
+        @(await Html.RenderComponentAsync<UserMenuModalsComponent>(RenderMode.Static, new {EmployeeNames=Model.EmployeesNames}))
+    }
+
+    @*Renders the offcanvases*@
+    @(await Html.RenderComponentAsync<OffCanvasComponent>(RenderMode.Static, new {IsAdmin=isAdmin, ReportEntries=Model.ReportEntries, PendingRequests=Model.PendingRequests}))
+
+    @******************************************************Render all modals here*************************************************@
+    @*Renders add modal*@
+    @(await Html.RenderComponentAsync<AddRequestModalComponent>(RenderMode.Static, new {IsAdmin=isAdmin, EmployeeNames=Model.EmployeesNames}))
+    @*Renders vacation event modal*@
+    @(await Html.RenderComponentAsync<EventDetailsModalComponent>(RenderMode.Static, new {IsAdmin=isAdmin, EventType="Vacation"}))
+    @*Renders sick event modal*@
+    @(await Html.RenderComponentAsync<EventDetailsModalComponent>(RenderMode.Static, new {IsAdmin=isAdmin, EventType="Sick"}))
+    @*Renders company day event modal*@
+    @(await Html.RenderComponentAsync<EventDetailsModalComponent>(RenderMode.Static, new {IsAdmin=isAdmin, EventType="Company"}))
+    @*Renders stat holiday event modal*@
+    @(await Html.RenderComponentAsync<EventDetailsModalComponent>(RenderMode.Static, new {IsAdmin=isAdmin, EventType="Stat"}))
+    @*Renders miscallaneous modals*@
+    @(await Html.RenderComponentAsync<MiscellaneousModalsComponent>(RenderMode.Static, new {IsAdmin=isAdmin, ReviewedRequests=Model.ReviewedRequests}))
+    @*Renders confirmation modal*@
+    @(await Html.RenderComponentAsync<ConfirmationMessageModalComponent>(RenderMode.Static))
+
+    @*Display notification to reg. user*@
+    if (!isAdmin && Model.ReviewedRequests != null && Model.ReviewedRequests.Count() > 0)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                displayNotificationModal();
+            });
+        </script>
+    }
+}

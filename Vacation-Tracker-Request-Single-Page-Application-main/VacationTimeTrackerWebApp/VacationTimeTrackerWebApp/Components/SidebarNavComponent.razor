@@ -1,0 +1,99 @@
+﻿@using VacationTimeTrackerWebApp.Models;
+
+<nav id="sidebar-nav">
+    <div class="sidebar-top">
+        @*
+            <span class="shrink-btn">
+            <i class='bx bx-chevron-left'></i>
+            </span>
+        *@
+        <img src="/imgs/main-logo.png" class="logo" alt="Sad Panda Studios">
+        <h3 class="hide">Sad Panda Studios</h3>
+    </div>
+    <div class="sidebar-links">
+        <ul>
+            <div class="active-tab"></div>
+            <li class="tooltip-element" data-tooltip="0">
+                <a href="#" class="active" data-active="0" data-href="calendar-container" aria-controls="calendar-container-tag" id="calendar-menu-item">
+                    <div class="icon">
+                        <i class='bx bx-calendar'></i>
+                        <i class='bx bxs-calendar'></i>
+                    </div>
+                    <span class="link hide">Calendar</span>
+                </a>
+            </li>
+            @if (Employee.IsAdmin())
+            {
+                <li class="tooltip-element" data-tooltip="1">
+                    <a href="#" data-href="requests-canvas" data-active="1">
+                        <div class="icon">
+                            <i class='bx bx-message-square-detail'></i>
+                            <i class='bx bxs-message-square-detail'></i>
+                        </div>
+                        <span class="link hide">
+                            Requests
+                            <span class="position-absolute start-50 translate-mid badge rounded-pill bg-danger" id="pending-request-count" style="display: none;">
+                                @if (Int32.Parse(NumRequestsAsString) > 99)
+                                {
+                                    NumRequestsAsString += "+";
+                                }
+                                @NumRequestsAsString
+                            </span>
+                        </span>
+                    </a>
+                </li>
+                <li class="tooltip-element" data-tooltip="2">
+                    <a href="#" data-href="users-canvas" aria-controls="users-canvas" data-active="2">
+                        <div class="icon">
+                            <i class='bx bx-user-circle'></i>
+                            <i class='bx bxs-user-circle'></i>
+                        </div>
+                        <span class="link hide">Employees</span>
+                    </a>
+                </li>
+                <li class="tooltip-element" data-tooltip="3">
+                    <a href="#" data-href="report-canvas" aria-controls="report-canvas" data-active="3">
+                        <div class="icon">
+                            <i class='bx bx-bar-chart-square'></i>
+                            <i class='bx bxs-bar-chart-square'></i>
+                        </div>
+                        <span class="link hide">Report</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="sidebar-footer">
+        <a href="#" class="account tooltip-element" data-tooltip="0">
+            <i class='bx bx-user'></i>
+        </a>
+        <div class="admin-user tooltip-element" data-tooltip="1">
+            <div class="admin-profile hide">
+                <div class="initials-div avatar-circle">
+                    <span class="initials">@Employee?.FirstName[0]@Employee?.LastName[0]</span>
+                </div>
+                <div class="admin-info">
+                    <h3>@Employee?.FullName()</h3>
+                    <h5>@Employee?.Entitlement.AccessType</h5>
+                </div>
+            </div>
+            <a href="user/logout" class="log-out">
+                <i class='bx bx-log-out'></i>
+            </a>
+        </div>
+    </div>
+</nav>
+
+@code {
+    /// <summary>
+    /// The current user/employee.
+    /// </summary>
+    [Parameter]
+    public Employee Employee { set; get; }
+
+    /// <summary>
+    /// The number of pending requests as a string, if any.
+    /// </summary>
+    [Parameter]
+    public string NumRequestsAsString { set; get; }
+}

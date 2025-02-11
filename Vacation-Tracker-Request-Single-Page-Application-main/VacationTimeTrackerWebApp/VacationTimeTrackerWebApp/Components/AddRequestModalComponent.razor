@@ -1,0 +1,70 @@
+﻿@*This component handles all the rendering and submission via the "add" modals*@
+@using Microsoft.AspNetCore.Components.Web
+@using VacationTimeTrackerWebApp.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+@*Modal for adding a timeslot i.e. Vacation, Sick, etc*@
+<div class="modal fade" id="@ModalId" tabindex="-1" role="dialog" aria-labelledby="@ModalId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="timeslotTile">@ModalTitle</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="timeoff-submission-form">
+                    <div>
+                        <RequestTypeAndEmployeesModalComponent IsAdmin=@IsAdmin EmployeeNames=@EmployeeNames></RequestTypeAndEmployeesModalComponent>
+                        <DatePickerTemplateComponent></DatePickerTemplateComponent>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-primary" id="@SubmitId" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// Represents the corresponding modal's ID.
+    /// </summary>
+    protected string? ModalId;
+
+    /// <summary>
+    /// Represents the corresponding submit btn ID.
+    /// </summary>
+    protected string? SubmitId;
+
+    /// <summary>
+    /// Represents the corresponding modal's title.
+    /// </summary>
+    public string? ModalTitle { get; set; }
+
+    /// <summary>
+    /// List of employees' name.
+    /// </summary>
+    [Parameter]
+    public Dictionary<string, string>? EmployeeNames { get; set; }
+
+    /// <summary>
+    /// Indicates whether the current user is an admin user.
+    /// </summary>
+    [Parameter]
+    public bool IsAdmin { get; set; }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        ModalId = "add-timeslot-modal";
+        SubmitId = "add-timeslot-submit";
+        ModalTitle = "Request Timeoff";
+
+        @if (IsAdmin)
+        {
+            ModalTitle = "Add Timeoff";
+        }
+    }
+}

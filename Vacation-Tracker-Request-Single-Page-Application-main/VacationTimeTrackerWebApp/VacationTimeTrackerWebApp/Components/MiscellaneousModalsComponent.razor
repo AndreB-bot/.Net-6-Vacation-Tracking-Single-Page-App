@@ -1,0 +1,133 @@
+﻿@using VacationTimeTrackerWebApp.Models;
+
+<div class="modal fade" id="month-picker-modal" tabindex="-1" aria-labelledby="month-picker-modal-label" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="month-picker">
+                <div class="month-picker-top">
+                    <div class="month-picker-top-title">
+                        <span>Select A Month</span>
+                    </div>
+                </div>
+                <ul id="month-picker-body">
+                    <li data-month="0" class="month-picker-body-month"><span>Jan</span></li>
+                    <li data-month="1" class="month-picker-body-month"><span>Feb</span></li>
+                    <li data-month="2" class="month-picker-body-month"><span>Mar</span></li>
+                    <li data-month="3" class="month-picker-body-month"><span>Apr</span></li>
+                    <li data-month="4" class="month-picker-body-month"><span>May</span></li>
+                    <li data-month="5" class="month-picker-body-month"><span>Jun</span></li>
+                    <li data-month="6" class="month-picker-body-month"><span>Jul</span></li>
+                    <li data-month="7" class="month-picker-body-month"><span>Aug</span></li>
+                    <li data-month="8" class="month-picker-body-month"><span>Sep</span></li>
+                    <li data-month="9" class="month-picker-body-month"><span>Oct</span></li>
+                    <li data-month="10" class="month-picker-body-month"><span>Nov</span></li>
+                    <li data-month="11" class="month-picker-body-month"><span>Dec</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+@*Credits to: GEORGE BLUTH https://codepen.io/codersdesign/pen/evaBXm*@
+<div class="modal fade" id="wait-modal" tabindex="-1" role="dialog" aria-labelledby="wait-modal-label">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="loader"></div>
+                <div clas="loader-txt">
+                    <p>Please Wait...<br><br><small>We are busily working in background.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!IsAdmin)
+{
+    <div class="modal fade" id="requests-notification-modal" tabindex="-1" role="dialog" aria-labelledby="requests-notification-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="max-height: 90vh;">
+                <div class="modal-header" style="border-bottom:none;">
+                    <h3 class="modal-title" id="exampleModalLongTitle">Requests Notifcation</h3>
+                    <a class="close" data-bs-dismiss="modal" aria-label="Close" style="margin:0px;">
+                        <span aria-hidden="true">
+                            <svg class="svg-inline--fa fa-times fa-w-11" aria-hidden="true" data-prefix="fas" data-icon="times" role="presentation" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" data-fa-i2svg="">
+                                <path fill="black" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+                <div class="d-flex flex-column align-items-center overflow-auto" id="requests-notification-body" style="max-height: 90vh;">
+                    @foreach (var request in ReviewedRequests)
+                    {
+                        var typeIndicator = (request.GetTypeString() == "Vacation") ? "bg-success" : "bg-sick";
+                        var dayOrDays = (request.NumberOfDays > 1) ? "Days" : "Day";
+
+                        var typeTitle = request.GetTypeString();
+                        typeTitle += (typeTitle == "Sick") ? $"\t{dayOrDays}" : "";
+
+                        <div class="row justify-content-center mt-2 w-75">
+                            <div class="content d-flex shadow">
+                                <div class="card text-white @typeIndicator first-card card-40" style="max-width: 18rem;">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">@typeTitle Request</h5>
+                                        <p class="card-text">
+                                            @request.StartDate.ToString("dd\\/MMM\\/yyyy")
+                                            <br />To<br />
+                                            @request.EndDate.ToString("dd\\/MMM\\/yyyy")
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="card bg-light card-20" style="max-width: 18rem;">
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <h5 class="card-title">@request.NumberOfDays @dayOrDays</h5>
+                                    </div>
+                                </div>
+                                @if (request.IsApproved())
+                                {
+                                    <div class="card text-white approved d-flex align-items-center justify-content-center card-40" style="max-width: 18rem;">
+                                        <i class="bi bi-patch-check text-white display-3"></i>
+                                        <h3>Approved</h3>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="card text-white declined d-flex align-items-center justify-content-center card-40" style="max-width: 18rem;">
+                                        <i class="fa fa-ban text-white display-4"></i>
+                                        <h3>Declined</h3>
+                                    </div>
+                                }
+                            </div>
+                            @if (request.Comments != null)
+                            {
+                                <div class="w-100 px-0">
+                                    <button type="button" class="btn-info-custom w-100" id="comment-@request.RequestId" data-bs-toggle="dropdown" aria-expanded="false">View Comments</button>
+                                    <ul class="dropdown-menu w-75" aria-labelledby="comment-@request.RequestId">
+                                        <li style="padding: 0 1rem;">@request.Comments</li>
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    /// <summary>
+    /// Indicates whether the current user is an admin user.
+    /// </summary>
+    [Parameter]
+    public bool IsAdmin { get; set; }
+
+    /// <summary>
+    /// List of reviewed Request objects to "NotifyUser".
+    /// </summary>
+    [Parameter]
+    public List<Request>? ReviewedRequests { get; set; }
+}

@@ -1,0 +1,224 @@
+﻿<div class="modal fade user-menu-modal" id="update-user-modal" tabindex="-1" role="dialog" aria-labelledby="update-user-modal-label">
+    <div class="modal-dialog modal-md modal-dialog-centered card-modal" role="document">
+        <div class="modal-content">
+            <div class="row justify-content-center card-row">
+                <div class="col-12 text-center align-self-center">
+                    <div class="text-center">
+                        <div class="card-3d-wrap mx-auto">
+                            @*<div class="toggle-radio">
+                                                    <input type="radio" name="rdo" id="update" checked>
+                                                    <input type="radio" name="rdo" id="remove">
+                                                    <div class="switch">
+                                                    <label for="update">Update Employee</label>
+                                                    <label for="remove">Remove Employee</label>
+                                                    <span></span>
+                                                    </div>
+                                                    </div>*@
+                            <div class="card-3d-wrapper">
+                                @**************************************Update Employee********************************************@
+                                <div class="card-front">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <div class="pb-3 d-flex flex-column-reverse update-header">
+                                                <h4>Update Employee</h4>
+                                                <button type="button" class="btn btn-warning align-self-end" id="remove">Remove Employee</button>
+                                            </div>
+                                            <form id="update-user-form">
+                                                <div class="form-group form-style">
+                                                    <i class="bi bi-people-fill"></i>
+                                                    <select id="update-user-employee-list" class="form-select form-style" aria-label="employees" name="employee" required>
+                                                        <option value="" disabled selected hidden>Employee</option>
+                                                        @if (EmployeeNames != null)
+                                                        {
+                                                            foreach (var employee in EmployeeNames.OrderBy(key => key.Value))
+                                                            {
+                                                                                                        <option value="@employee.Key">@employee.Value</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-lock-fill"></i>
+                                                    <select id="update-user-access-list" class="form-select form-style" aria-label="employees" name="AccessType" required>
+                                                        <option value="" disabled selected hidden>Access Level</option>
+                                                        <option value="User">User</option>
+                                                        <option value="Admin">Admin</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-pen-fill"></i>
+                                                    <input id="update-user-first-name" type="text" name="FirstName" class="form-style" placeholder="First Name" autocomplete="off" required>
+                                                </div>
+                                                <input type="hidden" id="update-user-id" name="Id">
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-pen-fill"></i>
+                                                    <input id="update-user-last-name" type="text" name="LastName" class="form-style" placeholder="Last Name" autocomplete="off" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-envelope"></i>
+                                                    <input id="update-user-email" type="email" name="Email" class="form-style" placeholder="Email" autocomplete="off" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-calendar-check"></i>
+                                                    <div class="input-group" id="update-employee-start-date">
+                                                        <input type="text" id="update-user-start-date" data-calendar="update-user-calendar" class="form-control user-start-date" name="StartDate" placeholder="(Start Date) DD-MM-YYYY" autocomplete="off" style="margin-left: 1%;" required />
+                                                        <div class="input-group-addon input-group-prepend">
+                                                            <span class="calendar-icon-container">
+                                                                <i class="bi bi-calendar3" id="update-user-calendar" style="margin-left: 10%;"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-emoji-sunglasses-fill"></i>
+                                                    <input type="number" id="update-user-vacation" name="VacationDays" class="form-style" placeholder="Number Of Vacation Days" autocomplete="off" min="0" max="50" step="1" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-clipboard2-pulse"></i>
+                                                    <input type="number" id="update-user-sick" name="SickDays" class="form-style" placeholder="Number Of Sick Days" autocomplete="off" min="5" max="50" step="1" required>
+                                                </div>
+                                                <div class="user-form-btn-container">
+                                                    <button type="button" class="btn" data-bs-dismiss="modal" style="margin-right: 1%;">Cancel</button>
+                                                    <button id="update-user-submit-btn" class="btn" style="margin-left: 1%;">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                @**************************************Remove Employee********************************************@
+                                <div class="card-back">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <div class="mb-4 pb-3 d-flex flex-column-reverse">
+                                                <h4>Remove Employee</h4>
+                                                <button type="button" class="btn btn-info align-self-end" id="update">Update Employee</button>
+                                            </div>
+                                            <form id="remove-user-form">
+                                                <div class="form-group form-style">
+                                                    <i class="bi bi-people-fill"></i>
+                                                    <select class="form-select form-style" aria-label="employees" name="employee" id="remove-user-employee-list" required>
+                                                        <option value="" disabled selected hidden>Employee</option>
+                                                        @if (EmployeeNames != null)
+                                                        {
+                                                            foreach (var employee in EmployeeNames.OrderBy(key => key.Value))
+                                                            {
+                                                                                                        <option value="@employee.Key">@employee.Value</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="user-form-btn-container d-flex">
+                                                    <button type="button" class="btn" data-bs-dismiss="modal" style="margin-right: 2.5%;">Cancel</button>
+                                                    <button id="remove-user-submit-btn" class="btn" style="margin-left: 2.5%;">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ConfirmationPromptModalComponent EventId="remove-user" EventSubmitBtnId="remove-user-submit"></ConfirmationPromptModalComponent>
+
+@**************************************Add Employee********************************************@
+<div class="modal fade user-menu-modal" id="add-user-modal" tabindex="-1" role="dialog" aria-labelledby="add-user-modal-label">
+    <div class="modal-dialog modal-md modal-dialog-centered card-modal" role="document">
+        <div class="modal-content">
+            <div class="row justify-content-center card-row add-user-row">
+                <div class="col-12 text-center align-self-center">
+                    <div class="text-center">
+                        <div class="card-3d-wrap mx-auto">
+                            <div class="card-3d-wrapper">
+                                <div class="card-front">
+                                    <div class="center-wrap">
+                                        <div class="section text-center">
+                                            <h4 class="pb-3">Add Employee</h4>
+                                            <form id="add-user-form">
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-lock-fill"></i>
+                                                    <select class="form-select form-style" aria-label="employees" name="AccessType" required>
+                                                        <option value="" disabled selected hidden>Access Level</option>
+                                                        <option value="User">User</option>
+                                                        <option value="Admin">Admin</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-pen-fill"></i>
+                                                    <input type="text" name="FirstName" id="add-user-firstname" class="form-style" placeholder="First Name" autocomplete="off" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-pen-fill"></i>
+                                                    <input type="text" name="LastName" id="add-user-lastname" class="form-style" placeholder="Last Name" autocomplete="off" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-envelope"></i>
+                                                    <input type="email" name="Email" id="add-user-email" class="form-style" placeholder="Email" autocomplete="off" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-calendar-check"></i>
+                                                    <div class="input-group" id="employee-start-date">
+                                                        <input type="text" class="form-control user-start-date" data-calendar="add-user-calendar" name="StartDate" placeholder="(Start Date) DD-MM-YYYY" autocomplete="off" style="margin-left: 1%;" required />
+                                                        <div class="input-group-addon input-group-prepend">
+                                                            <span class="calendar-icon-container">
+                                                                <i class="bi bi-calendar3" id="add-user-calendar" style="margin-left: 10%;"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-emoji-sunglasses-fill"></i>
+                                                    <input type="number" name="VacationDays" class="form-style" placeholder="Number Of Vacation Days" autocomplete="off" min="0" max="50" step="1" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="fa-solid fa-plane-departure" style="margin-right: 0%;"></i>
+                                                    <input type="number" name="VacationRollover" class="form-style" placeholder="Number Of Vacation Rollover Days" autocomplete="off" min="0" max="50" step="1" required>
+                                                </div>
+                                                <div class="form-group mt-2 form-style">
+                                                    <i class="bi bi-clipboard2-pulse"></i>
+                                                    <input type="number" name="SickDays" class="form-style" placeholder="Number Of Sick Days" autocomplete="off" min="5" max="50" step="1" required>
+                                                </div>
+                                                <div class="user-form-btn-container">
+                                                    <button type="button" class="btn ml-2" data-bs-dismiss="modal" style="margin-right: 1%;">Cancel</button>
+                                                    <button id="add-user-submit-btn" class="btn" style="margin-left: 1%;">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="user-info-prompt-modal" aria-hidden="true" aria-labelledby="user-info-prompt-modal-label" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="user-info-prompt-modal-title">Confirm your choice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="user-info-prompt-modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="btn btn-info">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// A Dictionary object of employees' names.
+    /// </summary>
+    [Parameter]
+    public Dictionary<string, string>? EmployeeNames { get; set; }
+}

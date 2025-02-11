@@ -1,0 +1,274 @@
+Database Documentation for Vacation/Sick Time Tracking Application
+
+Current Version: 1.0 April 10, 2022
+
+Recent Changes:
+       - First version of Database Documentation attached to Project and uploaded
+
+Notes: Application expectations for database and associated requirements are outlined in this document. 
+
+       The application requires an SQL database for storing employees, requests, and their entitlements. The project team used MySQL during development
+       and testing, but the application should be compatible with most SQL systems. This document assumes you are working with MySQL, and thus syntax will
+       be appropriate to MySQL 8.0. Additional information may be found by referring to appropriate MySQL 8.0 documentation available at: https://dev.mysql.com/doc/refman/8.0/en/
+
+--------------- SECTIONS ---------------
+
+Database Schema
+
+- Employees
+-- Structure
+-- Primary Key(s)
+
+- Entitlements
+-- Structure
+-- Primary Key(s)
+-- Foreign Key(s)
+
+- Requests
+-- Structure
+-- Primary Key(s)
+-- Foreign Key(s)
+
+Database Management
+
+- Scheduled Events
+
+------------------------------------------------------------- DATABASE SCHEMA -------------------------------------------------------------
+
+------------------------------------------------------------- Employees -------------------------------------------------------------
+
+The Employees table contains essential Employee information for interaction with the app.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+NAME                DATATYPE            DESCRIPTION                                 ATTRIBUTES
+-----------------------------------------------------------------------------------------------------------------------------------------------
+EmployeeID          INT                 Auto-incrementing ID number assigned        Primary Key, Not-null, Unique, Unsigned, Auto-incrementing
+                                        to an Employee
+
+EmployeeEmail       VARCHAR(50)         Email address associated with employee,     Not-null, Unique
+                                        for default authentication purposes MUST
+                                        be a Google email address/gmail.com
+
+FirstName           VARCHAR(45)         Given name of the associated employee       Not-null
+
+LastName            VARCHAR(45)         Surname of the associated employee          Not-null
+
+StartDate           DATE                Date employee started working for the       Not-null
+                                        company
+
+SystemRemovalDate   DATE                Date employee is marked "Removed" in
+                                        application. Default value is NULL.
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+PRIMARY KEY: EmployeeID - Auto-incrementing INT, CASCADE UPDATE and CASCADE DELETE set
+
+
+------------------------------------------------------------- Entitlements -------------------------------------------------------------
+
+The Entitlements table contains information regarding an Employee's access level, time-off availabe, time-off taken, etc.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+NAME                    DATATYPE            DESCRIPTION                                 ATTRIBUTES
+-----------------------------------------------------------------------------------------------------------------------------------------------
+EmpID                   INT                 ID of Employee the record belongs to        Primary Key, Not-null, Unsigned
+
+AccessType              VARCHAR(8)          Permissions set the Employee will use,      Not-null
+                                            'User' or 'Administrator' access level
+
+VacationEarned          INT                 The base number of vacation days the        Unsigned
+                                            employee is entitled to in current year   
+
+VacationRollover        INT                 Unused vacation time from previous year,    Unsigned
+                                            available for use in the first six months
+                                            of current year
+
+VacationDaysAvailable   INT                 Total number of days available for the      Unsigned
+                                            current year, less any time spent on 
+                                            Pending or Approved requests
+
+SickDays                INT                 The number of sick days this employee is    Unsigned
+                                            entitled to in the current year
+
+SickTaken               INT                 The number of sick days taken in the        Unsigned
+                                            current year     
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+PRIMARY KEY: EmpID - Also a Foreign Key
+
+FOREIGN KEY: EmpID - References EmployeeID in Employees Table
+
+
+------------------------------------------------------------- Requests -------------------------------------------------------------
+
+The Requests table contains records pertaining to all Employee requests made using the application.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+NAME                DATATYPE            DESCRIPTION                                 ATTRIBUTES
+-----------------------------------------------------------------------------------------------------------------------------------------------
+RequestID           INT                 A Request identifier number                 Primary Key, Not-null, Unique, Unsigned, Auto-incrementing
+
+EmployeeID          INT                 ID of Employee making the request           Primary Key, Not-null, Unsigned
+
+StartDate           DATE                Day the request begins                      Not-null
+
+EndDate             DATE                Day the request ends                        Not-null
+
+Status              VARCHAR(1)          'P'ending, 'A'pproved, or 'R'ejected        Not-null
+                                        Default value is 'P' for Pending.
+
+Type                VARCHAR(1)          'V'acation, 'S'ick, 'C'ompany Day,          Not-null
+                                        'P' is used for Stat Holidays
+
+Days                INT                 The duration of the request provided by     Unsigned
+                                        the application
+
+Title               VARCHAR(45)         Name of the employee making the request,
+                                        or the name of the Company Day
+
+NotifyUser          TINYINT             A flag that is set when the status is
+                                        changed from pending to approved/rejected
+
+Comments            VARCHAR(255)        A comment field to explain reason for
+                                        request rejection
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+PRIMARY KEYS: RequestID - Auto-incrementing INT
+              EmployeeID - Also a Foreign Key
+
+FOREIGN KEY: EmployeeID - References EmployeeID in Employees Table
+
+
+------------------------------------------------------------- DATABASE MANAGEMENT -------------------------------------------------------------
+
+------------------------------------------------------------- Scheduled Events -------------------------------------------------------------
+
+This section assumes administrative access to the database, and that MySQL's event scheduling has been enabled. Please refer to MySQL Documentation on how to
+enable this function. To ensure events have been created, a SHOW EVENTS query may be run.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+EVENT NAME: Entitlements_Vacation_Update_Event
+EVENT FREQUENCY: ANNUAL, first day of year
+EVENT DESCRIPTION: This event sets the VacationRollover for the new year, and recalculates the VacationDaysAvailable for the year for each record.
+EVENT CODE:
+            DELIMITER $$
+
+            CREATE EVENT Entitlements_Vacation_Update_Event 
+            ON SCHEDULE
+                EVERY 1 YEAR 
+                STARTS '2022-01-01 00:00:00' 
+            ON COMPLETION PRESERVE 
+            ENABLE 
+            DO
+                BEGIN
+    
+                    UPDATE employees_vacation_and_sick_days.Entitlements 
+                    SET VacationRollover = VacationDaysAvailable
+                    WHERE EmpID > 0 AND
+                          VacationDaysAvailable > 0;
+        
+                    UPDATE employees_vacation_and_sick_days.Entitlements
+                    SET VacationDaysAvailable = VacationEarned + VacationRollover
+                    WHERE EmpID > 0 AND
+			              VacationEarned > 0;
+        
+	            END$$
+
+            DELIMITER ;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+EVENT NAME: Entitlements_SickDay_Update_Event
+EVENT FREQUENCY: ANNUAL, first day of year
+EVENT DESCRIPTION: This event sets the value of SickTaken to 0 to replenish SickDays for the year.
+EVENT CODE:
+            CREATE EVENT Entitlements_SickDay_Update_Event 
+            ON SCHEDULE
+                EVERY 1 YEAR 
+                STARTS '2022-01-01 00:00:00' 
+            ON COMPLETION PRESERVE 
+            ENABLE 
+            DO 
+                UPDATE employees_vacation_and_sick_days.Entitlements 
+	            SET SickTaken = 0
+                WHERE EmpID > 0;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+EVENT NAME: Employee_Removal_Update_Event
+EVENT FREQUENCY: MONTHLY, first day of month
+EVENT DESCRIPTION: This event removes an employee's email address from the Employees table, removes their Entitlements record, and
+                   removes Rejected request history, as well as any Pending requests, and Approved requests that commence after this
+                   event runs.
+EVENT CODE:
+            DELIMITER $$
+
+            CREATE EVENT Employee_Removal_Update_Event
+            ON SCHEDULE
+                EVERY 1 MONTH 
+                STARTS '2022-01-01 00:00:00' 
+            ON COMPLETION PRESERVE 
+            ENABLE 
+            DO
+                BEGIN
+
+                    UPDATE employees_vacation_and_sick_days.Employees 
+                    SET EmployeeEmail = concat(EmployeeID, ' ', 'Access Removed')
+                    WHERE EmployeeID > 0 AND SystemRemovalDate IS NOT NULL;
+        
+                    DELETE FROM employees_vacation_and_sick_days.Entitlements
+                    WHERE EmpID IN (SELECT EmployeeID AS EmpID
+                                    FROM employees_vacation_and_sick_days.Employees
+                                    WHERE SystemRemovalDate IS NOT NULL);
+        
+                    DELETE FROM employees_vacation_and_sick_days.Requests
+                    WHERE RequestID > 0 AND
+                          EmployeeID IN (SELECT EmployeeID
+                                         FROM employees_vacation_and_sick_days.Employees
+                                         WHERE SystemRemovalDate IS NOT NULL) AND
+			              Status IN ('P', 'R');
+              
+		            DELETE FROM employees_vacation_and_sick_days.Requests
+                    WHERE RequestID > 0 AND
+                          EmployeeID IN (SELECT EmployeeID
+                                         FROM employees_vacation_and_sick_days.Employees
+                                         WHERE SystemRemovalDate IS NOT NULL) AND
+			        DATEDIFF(StartDate, CURDATE()) >= 0;
+
+	            END$$
+
+            DELIMITER ;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+EVENT NAME: Entitlements_VacationRollover_Expiration_Event
+EVENT FREQUENCY: ANNUAL, first day of June
+EVENT DESCRIPTION: This event "expires" any unused VacationRollover time, as calculated by viewing the difference between base VacationEarned
+                   and VacationDaysAvailable.
+EVENT CODE:
+            DELIMITER $$
+
+            CREATE EVENT Entitlements_VacationRollover_Expiration_Event
+            ON SCHEDULE
+                EVERY 1 YEAR 
+                STARTS '2022-06-01 00:00:00' 
+            ON COMPLETION PRESERVE 
+            ENABLE 
+            DO
+                BEGIN
+
+                    UPDATE employees_vacation_and_sick_days.Entitlements
+                    SET VacationRollover = 0
+                    WHERE EmpID > 0 AND
+			              VacationRollover > 0;
+        
+                    UPDATE employees_vacation_and_sick_days.Entitlements
+                    SET VacationDaysAvailable = VacationEarned
+                    WHERE EmpID > 0 AND
+			              VacationDaysAvailable > VacationEarned;
+
+	            END$$
+
+            DELIMITER ;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------

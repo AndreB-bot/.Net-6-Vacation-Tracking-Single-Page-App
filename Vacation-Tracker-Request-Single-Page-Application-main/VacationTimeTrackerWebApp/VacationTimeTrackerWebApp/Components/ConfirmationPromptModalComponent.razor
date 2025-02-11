@@ -1,0 +1,55 @@
+﻿<div class="modal fade confirmation-prompt-modal" id="@EventId-confirmation-prompt-modal" aria-hidden="true" aria-labelledby="@EventId-confirmation-prompt-modal-label" tabindex="-1">
+    <div class="modal-dialog @Centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="@EventId-confirmation-prompt-modal-title">Confirm your choice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body confirmation-propmt-body" id="@EventId-confirmation-propmt-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-bs-toggle="modal" data-bs-dismiss="modal">Cancel</button>
+                <button id="@EventSubmitBtnId" class="btn btn-primary @RemoveEvent">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// String representing the event type i.e. vacation, sick, etc.
+    /// </summary>
+    [Parameter]
+    public string EventId { get; set; }
+
+    /// <summary>
+    /// The ID for the submit btn.
+    /// </summary>
+    [Parameter]
+    public string EventSubmitBtnId { get; set; }
+
+    /// <summary>
+    /// Helper variable for applying the modal-dialog-centered CSS class for events.
+    /// </summary>
+    private string Centered = "modal-dialog-centered";
+
+    /// <summary>
+    /// Helper variable for applying the remove-event CSS class for events.
+    /// </summary>
+    private string RemoveEvent = "remove-event";
+
+    /// <inheritDoc />
+    protected override void OnInitialized()
+    {
+        if (EventId == "remove-user" || EventId == "update-user")
+        {
+            Centered = RemoveEvent = "";
+        }
+
+        if (EventId == "request-reject")
+        {
+            RemoveEvent = "";
+        }
+
+    }
+   }

@@ -1,0 +1,352 @@
+﻿:root {
+    --border-radius-size: 14px;
+}
+
+#users-cards-container .row {
+    --bs-gutter-x: 0 !important;
+}
+
+#users-cards-container .card-body {
+    margin: 0% 0% 0% 3%;
+    padding: 6% 0%;
+}
+
+#users-cards-container .card {
+    margin: 5% 0%;
+    -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    min-height: 200px;
+    height: auto;
+    border-radius: var(--border-radius-size);
+    cursor: pointer;
+    perspective: 800px;
+    background-image: linear-gradient(to right, #2c3e50, #4ca1af);
+    user-select: none;
+}
+
+    #users-cards-container .card::after {
+        -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    #users-cards-container .card:hover {
+        -webkit-transform: scale(1.10, 1.10);
+        transform: scale(1.10, 1.10);
+        box-shadow: -20px 20px 30px -10px #192824;
+    }
+
+.view {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.user-card-img-container {
+    position: relative;
+    height: 230px;
+    border-top-left-radius: var(--border-radius-size);
+    border-top-right-radius: var(--border-radius-size);
+}
+
+#add-user-card-img img {
+    position: absolute;
+    top: -35%;
+    z-index: 1;
+}
+
+#update-user-card-img img {
+    position: absolute;
+    top: -43%;
+    z-index: 1;
+    left: 8%;
+    width: 85%;
+}
+
+#add-user-card-img img,
+#update-user-card-img img {
+    display: block;
+    user-select: none;
+    pointer-events: none
+}
+
+.user-card-img-bg img {
+    object-fit: contain;
+    height: 100%;
+}
+
+#add-user-card-img img,
+.user-card-img-bg img {
+    width: 100%;
+}
+
+.add-user-bg {
+    background: url('/imgs/add-user-bg.png');
+}
+
+.user-card-body {
+    padding: 10%;
+    margin-top: 5%;
+    border-bottom-left-radius: var(--border-radius-size);
+    border-bottom-right-radius: var(--border-radius-size);
+    color: white;
+    justify-content: space-evenly;
+}
+
+    .user-card-body svg {
+        max-height: 3rem;
+    }
+
+    .user-card-body h3 {
+        margin-bottom: 0px;
+    }
+
+h6 span {
+    padding: 0 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.card-3d-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    perspective: 800px;
+}
+
+.card-3d-wrapper {
+    width: 100%;
+    height: 100%;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    transition: all 600ms ease-out;
+}
+
+.card-front .btn-close,
+.card-back .btn-close {
+    justify-self: end;
+    margin-right: 2%;
+    margin-top: 2%;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+    .card-back .form-group {
+        margin-bottom: 10% !important;
+    }
+
+    .card-back .center-wrap {
+        top: 47%;
+        height: 85%;
+    }
+
+.center-wrap {
+    position: absolute;
+    width: 100%;
+    padding: 0 35px;
+    top: 50%;
+    left: 0;
+    transform: translate3d(0, -50%, 35px) perspective(100px);
+    z-index: 20;
+    display: block;
+}
+
+.card-front, .card-back {
+    width: 100%;
+    height: 100%;
+    background-color: blanchedalmond;
+    background-image: url('/svgs/add-user-card-bg.svg');
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-size: 140%;
+    position: absolute;
+    border-radius: 6px;
+    left: 0;
+    top: 0;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: grid;
+}
+
+.switch {
+    position: absolute;
+    top: 110%;
+    left: 30%;
+    width: 60%;
+    height: 58vh;
+    text-align: center;
+    margin: -30px 0 0 -75px;
+    background: #00bc9c;
+    transition: all 0.2s ease;
+    border-radius: 25px;
+    z-index: 1;
+}
+
+    .switch span {
+        position: absolute;
+        width: 20px;
+        height: 4px;
+        top: 50%;
+        left: 50%;
+        margin: -2px 0px 0px -4px;
+        background: #fff;
+        display: block;
+        transform: rotate(-45deg);
+        transition: all 0.2s ease;
+    }
+
+        .switch span:after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 4px;
+            height: 12px;
+            margin-top: -8px;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+input[type=radio] {
+    display: none;
+}
+
+.switch label {
+    cursor: pointer;
+    color: rgba(0,0,0,0.2);
+    width: 60px;
+    line-height: 50px;
+    transition: all 0.2s ease;
+    font-weight: 800;
+    font-family: sans-serif;
+    user-select: none;
+}
+
+label[for=update] {
+    position: absolute;
+    left: 0px;
+    height: 20px;
+    margin-left: 4%;
+}
+
+label[for=remove] {
+    position: absolute;
+    right: 0px;
+    margin-right: 4%;
+}
+
+#remove:checked ~ .switch {
+    background: lightcoral;
+}
+
+    #remove:checked ~ .switch span {
+        background: #fff;
+        margin-left: -8px;
+    }
+
+        #remove:checked ~ .switch span:after {
+            background: #fff;
+            height: 20px;
+            margin-top: -8px;
+            margin-left: 8px;
+        }
+
+#update:checked ~ .switch label[for=update] {
+    color: #fff;
+}
+
+#remove:checked ~ .switch label[for=remove] {
+    color: #fff;
+}
+
+/*****************************************************************************************************************************/
+#users-cards-container {
+    margin-top: 10% !important;
+}
+
+.card-row {
+    height: 95vh;
+}
+
+    .card-row .text-center {
+        height: inherit;
+    }
+
+#add-user-modal .card-row {
+    height: 90vh;
+}
+
+/**************************************ALL MEDIA QUERIES FOR CARDS CSS*************************************************************/
+@media only screen and (max-width: 1440px) {
+    #users-cards-container .row {
+        width: 85%;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .user-card-img-container {
+        height: 180px;
+    }
+
+    .switch {
+        width: 85%;
+    }
+}
+
+@media only screen and (min-height: 670px) and (max-height: 861px) {
+    #update-user-modal .card-front .center-wrap {
+        top: 44vh;
+    }
+}
+
+@media only screen and (min-height: 860px) {
+    .user-menu-modal .card-row {
+        height: 95% !important;
+    }
+
+    #add-user-modal .card-row {
+        height: 90% !important;
+    }
+
+    .user-menu-modal .modal-content {
+        top: 6% !important;
+    }
+
+    .user-menu-modal .form-style {
+        padding: 13px 20px !important;
+        height: 48px !important;
+    }
+
+    .user-menu-modal .btn:not(.btn-secondary, .btn-warning, .btn-info) {
+        height: 44px !important;
+    }
+
+    .user-form-btn-container {
+        margin-top: 1.5rem !important;
+    }
+}
+
+@media only screen and (min-height: 920px) {
+    #update-user-modal .card-row {
+        height: 91.8% !important;
+    }
+}
+
+@media only screen and (min-height: 1000px) {
+    .update-header {
+        margin-bottom: 2rem;
+    }
+}
+
+@media only screen and (min-height: 670px) {
+    #update-user-modal .user-form-btn-container {
+        margin-top: 8vh;
+    }
+}

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VacationTimeTrackerWebApp</title>
+    <link rel="icon" type="image/png" href="/favicon.ico" sizes="32x32">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/VacationTimeTrackerWebApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" integrity="sha512-Oy+sz5W86PK0ZIkawrG0iv7XwWhYecM3exvUtMKNJMekGFJtVAhibhRPTpmyTj8+lJCkmWfnpxKgT2OopquBHA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @if (ViewData["VacationApp"] != null)
+    {
+        <link href="~/css/sidebar.css" rel="stylesheet" type="text/css" />
+        <link href="~/css/offcanvas.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.0.9/css/boxicons.min.css" integrity="sha512-JoTyby80Se/bZHPd4HFtu7GBuh7iTrveAT+gqgyaRQ80MJGg+cE7X+wGV5laqeztm7GxdeHjomrOw7Sur98xfA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <header>
+        @if (ViewData["VacationApp"] == null)
+        {
+            @*Do nothing.*@
+        }
+        else
+        {
+            <component type="typeof(Components.SidebarNavComponent)" render-mode="Static" param-Employee=@ViewData["User"] param-NumRequestsAsString=@ViewData["NumRequests"] />
+        }
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Stylesheets", required: false)
+</body>
+</html>

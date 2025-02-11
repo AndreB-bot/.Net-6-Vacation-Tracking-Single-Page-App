@@ -1,0 +1,96 @@
+﻿<div class="modal fade" id="@EventModalId" tabindex="-1" role="dialog" aria-labelledby="@EventModalId" aria-hidden="true">
+    <div class="modal-dialog event-details-modal modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="card text-center">
+                <div class="modal-header">
+                    <h4 class="modal-title text-white" id="@EventId-details-header"></h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" id="@EventId-title"></h5>
+                    <p class="card-text" id="@EventDetailsId"></p>
+                    @if (IsAdmin)
+                    {
+                        <button class="btn btn-primary show-confirmation-prompt" data-bs-target="#@EventId-confirmation-prompt-modal" data-bs-toggle="modal" data-bs-dismiss="modal">Remove</button>
+                        @if (EventType == "Vacation" || EventType == "Sick Day")
+                        {
+                            <button class="btn btn-primary hidden" id="@EventId-reject-btn">Reject</button>
+                            <button class="btn btn-primary hidden" id="@EventId-approve-btn">Approve</button>
+                        }
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    }
+                </div>
+                <div class="card-footer text-white fw-bold" id="@EventFooterDetails">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (IsAdmin)
+{
+    <ConfirmationPromptModalComponent EventId=@EventId EventSubmitBtnId=@EventSubmitBtnId></ConfirmationPromptModalComponent>
+}
+
+@code {
+    /// <summary>
+    /// String representing the event type i.e. vacation, sick, etc.
+    /// </summary>
+    public string EventId;
+
+    /// <summary>
+    /// The ID for the respective modal.
+    /// </summary>
+    public string EventModalId;
+
+    /// <summary>
+    /// The ID for the respective event details.
+    /// </summary>
+    public string EventDetailsId;
+
+    /// <summary>
+    /// The ID for the respective event footer details.
+    /// </summary>
+    public string EventFooterDetails;
+
+    /// <summary>
+    /// The ID for the submit btn.
+    /// </summary>
+    public string EventSubmitBtnId;
+
+    /// <summary>
+    /// Represent the event type (i.e. 'sick', 'vacation')
+    /// </summary>
+    [Parameter]
+    public string EventType { get; set; }
+
+    /// <summary>
+    /// Indicates whether the current user is an admin user.
+    /// </summary>
+    [Parameter]
+    public bool IsAdmin { get; set; }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        EventId = EventType.ToLower() + "-event";
+        EventDetailsId = EventId + "-details";
+        EventModalId = EventDetailsId + "-modal";
+        EventFooterDetails = EventId + "-duration";
+        EventSubmitBtnId = EventId + "-submit-id";
+
+        if (EventType == "Sick" || EventType == "Company")
+        {
+            EventType += " Day";
+            return;
+        }
+
+        if (EventType == "Stat")
+        {
+            EventType += " Holiday";
+        }
+    }
+}

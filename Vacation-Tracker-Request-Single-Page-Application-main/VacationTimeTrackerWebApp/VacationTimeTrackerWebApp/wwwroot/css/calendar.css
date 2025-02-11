@@ -1,0 +1,62 @@
+#calendar {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: max-content;
+}
+
+#calendar-container .container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#calendar-container a {
+    text-decoration: none;
+    color: #000000;
+}
+
+#calendar .fc-day {
+    cursor: pointer;
+}
+
+#calendar .fc-day-today {
+    background: #ffffff;
+}
+
+.fc-day-today .fc-daygrid-day-top {
+    background: cadetblue;
+}
+
+.fc-year-button,
+.fc-daygrid-day-number {
+    pointer-events: none !important;
+}
+
+.fc-toolbar {
+    width: 55vw;
+}
+
+.calendar-icon-container {
+    cursor: pointer;
+}
+
+.fc-view-harness {
+    width: 55vw;
+}
+
+.fc-today-button,
+.fc-direction-ltr .fc-toolbar-chunk:not(:first-child) .fc-button-group > .fc-button {
+    margin-left: 1px !important;
+}
+
+/**************************************************ALL MEDIA QUERIES**********************************************************/
+@media only screen and (max-width: 990px) and (min-width: 900px) {
+    #calendar-container .row {
+        margin-left: -10%;
+    }
+}
+
+@media only screen and (max-width: 899px) {
+    #calendar-container .row {
+        margin-left: -15%;
+    }
+}

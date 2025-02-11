@@ -1,0 +1,39 @@
+﻿.card-40 {
+    width: 40% !important;
+}
+
+.card-20 {
+    width: 20% !important;
+}
+
+#requests-notification-modal .content {
+    padding: 0 !important;
+    background-color: gainsboro;
+    background-image: url(/svgs/add-user-card-bg.svg);
+}
+
+#requests-notification-modal .modal-content {
+    background-color: gainsboro;
+    background-image: url(/svgs/add-user-card-bg.svg);
+}
+
+.approved {
+    background: #47c9a2;
+}
+
+.declined {
+    background: #F2886D;
+}
+
+.vh-90 {
+    height: 90vh;
+}
+
+.btn-info-custom {
+    color: #000;
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+}
+
+    .btn-info-custom:hover {
+    }

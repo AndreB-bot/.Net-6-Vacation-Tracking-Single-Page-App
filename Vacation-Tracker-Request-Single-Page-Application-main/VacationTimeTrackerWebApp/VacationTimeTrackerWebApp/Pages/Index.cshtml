@@ -1,0 +1,29 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@section Stylesheets {
+<link href="~/css/homepage.css" rel="stylesheet" type="text/css" />
+}
+
+<section class="mt-5">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;background: aliceblue;max-height: 70vh;">
+                    <div class="card-body p-5 text-center" style="height: inherit;">
+                        <div id="logo-container" style="height: 25vh;">
+                            <img src="/imgs/main-logo.png" class="logo" alt="Sad Panda Studios">
+                            <h2>Sad Panda Studios<sup><small>&copy;</small></sup></h2>
+                            <h4>Timeoff Tracker</h4>
+                        </div>
+                        <img src="/imgs/homepage-vector.png" class="vector" alt="Homepage vector" style="height: 15vh;">
+                        <hr>
+                        <a href="/user/google-signin" class="google-singin btn btn-lg btn-block btn-primary" style="max-height: 8vh;"><i class="bi bi-google"></i> Sign in with Google</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
